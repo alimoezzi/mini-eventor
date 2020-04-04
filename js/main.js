@@ -1,14 +1,10 @@
 
-class Listerner{
+class Event{
   state = false;
-  func = null;
   name = "";
-  trigger = [];
-  constructor(state, func, name, ...trigger) {
+  constructor(state, func, name) {
     this.state = state;
-    this.func = func;
     this.name = name;
-    this.trigger = trigger;
   }
 }
 
@@ -24,8 +20,7 @@ class Eventor {
     listerners.concat(new Listerner(
       false,
       typeof arguments[i] == "function" ? arguments[i] : new Function(arguments[i]),
-      `${arguments[i]}`,
-      )
+      `${arguments[i]}`))
   }
   }
 }
