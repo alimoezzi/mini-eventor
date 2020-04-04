@@ -2,43 +2,43 @@ class Event {
   state = false;
   name = "";
   listeners = [];
+  static instances = [];
 
-  constructor(state , func, name) {
-    switch (arguments.length) {
-      case 0:
-        //do basic code
+  constructor({ name, state, func }) {
+    switch (Object.keys(arguments[0]).length) {
+      case 2:
+        this.state = true;
+        this.name = name;
+        this.func = func;
+        Event.instances.push(this);
         break;
       case 1:
         for (let i = 0; i < Event.instances.length; i++) {
           if (Event.instances[i].name === name) {
-            return name;
+            return Event.instances[i];
           }
         }
-        this.state = true;
-        this.name = name;
-        this.func = func;
-        Class.instances.push(this);
         break;
       case 4:
         this.state = state;
         this.name = name;
         this.func = func;
-        Class.instances.push(this);
+        Event.instances.push(this);
       default:
         //do code with `a` & `b`
         break;
     }
   }
 
-  addListerns(eventor){
+  addListerns(eventor) {
     this.listeners.concat(eventor);
   }
 
-  setOff(){
+  setOff() {
     this.state = false;
   }
 
-  setOn(){
+  setOn() {
     this.state = true;
   }
 }
@@ -49,44 +49,55 @@ class Eventor {
     this.events = []
   }
 
-  addListerner(...args) {
+  addListerner({ name, func }) {
     const { events } = this;
-    for (var i = 0; i < arguments.length; i++) {
-      let a = new Event(arguments[i]);
-      events.concat(a);
-      a.addListerns(this);
-    }
+    let a = new Event({ name: name, func: func });
+    events.concat(a);
+    a.addListerns(this);
   }
 
-  fire(name, ...args){
-    console.log(`got new event ${name} ${args}`);
-    let a = new Event(arguments[i]);
+  fire(name, ...args) {
+    console.log(`got new event ${ name } ${ args }`);
+    let a = new Event({ name: name });
+    console.log(a);
     a.func(...args);
   }
 
-  Off(name){
-    let a = new Event(arguments[i]);
+  Off(name) {
+    let a = new Event({ name: name });
     a.setOff();
   }
 
-  On(name){
-    let a = new Event(arguments[i]);
+  On(name) {
+    let a = new Event({ name: name });
     a.setOn();
   }
 
-  removeEvent(){
-    let a = new Event(arguments[i]);
+  removeEvent(name) {
+    let a = new Event({ name: name });
     a.setOff();
   }
 
-  countListeners(name){
-    let a = new Event(arguments[i]);
+  removeListener({ name, listerner }) {
+    let a = new Event({ name: name });
+    var i = 0;
+    while (a.listeners !== listerner) {
+      i++;
+    }
+    a.listeners.splice(i, 1);
+  }
+
+  countListeners(name) {
+    let a = new Event({ name: name });
     return a.listeners.length
   }
 
   listerners(name) {
-    let a = new Event(arguments[i]);
+    let a = new Event({ name: name });
     return a.listeners;
   }
-
 }
+
+a  = new Eventor();
+a.addListerner({ name: 'ali', func: (k) => (console.log(k)) });
+a.fire('ali',"reza");
